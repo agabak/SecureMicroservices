@@ -22,5 +22,44 @@ namespace Movie.API.Controllers
             var movies = await _unityOfWork.Movies.GetAll();
             return movies.ToList();
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Entities.Movie>> Get(int id)
+        {
+            return await _unityOfWork.Movies.GetById(id);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Put(Entities.Movie movie)
+        {
+            _unityOfWork.Movies.UpdateMovie(movie);
+            await _unityOfWork.SaveChanges();
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post(Entities.Movie movie)
+        {
+            await _unityOfWork.Movies.Add(movie);
+            await _unityOfWork.SaveChanges();
+            return Ok();
+        }
+
+        [HttpPost("PostList")]
+        public async Task<IActionResult> Post(
+            IEnumerable<Entities.Movie> movies)
+        {
+            await _unityOfWork.Movies.AddRange(movies);
+            await _unityOfWork.SaveChanges();
+            return Ok();
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(Entities.Movie movie)
+        {
+             _unityOfWork.Movies.DeleteEntity(movie);
+            await _unityOfWork.SaveChanges();
+            return NotFound();
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Movie.API.Data.DataContext;
+using System.Threading.Tasks;
 
 namespace Movie.API.Data.Repositories.Repository
 {
@@ -10,6 +11,12 @@ namespace Movie.API.Data.Repositories.Repository
         {
             _context = context;
         }
+
+        public async Task<Entities.Movie> GetById(int id)
+        {
+            return await _context.Movies.SingleOrDefaultAsync(x => x.Id == id);
+        }
+
         public void UpdateMovie(Entities.Movie movie)
         {
             if (movie == null) return;
