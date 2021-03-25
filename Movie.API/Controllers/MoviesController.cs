@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Movie.API.Data.Repositories;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ namespace Movie.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(policy: "clientIdPolicy")]
     public class MoviesController : ControllerBase
     {
         private readonly IUnityOfWork _unityOfWork;
