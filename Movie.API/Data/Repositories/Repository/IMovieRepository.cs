@@ -4,8 +4,7 @@ namespace Movie.API.Data.Repositories.Repository
 {
     public interface IMovieRepository : IRepository<Entities.Movie>
     {
-        Task<Entities.Movie> GetById(int id);
-
+        Task UpdateById(int id, Entities.Movie movie);
         void UpdateMovie(Entities.Movie movie);
     }
 }

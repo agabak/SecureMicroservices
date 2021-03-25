@@ -43,18 +43,19 @@ namespace Movie.API.Data.Repositories
             IQueryable<T> query = entities;
             if(filter is not null)
             {
-                query.Where(filter);
+                
+              query = query.Where(filter);
             }
             if(!string.IsNullOrEmpty(includProperties))
             {
                 foreach(var property in includProperties.Split(new char[] { ','},
                     StringSplitOptions.RemoveEmptyEntries))
                 {
-                    query.Include(property);
+                  query =  query.Include(property);
                 }
             }
             if (query is null) return null;
-            return await query.SingleOrDefaultAsync();
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<T>> GetAll()
@@ -70,14 +71,14 @@ namespace Movie.API.Data.Repositories
             IQueryable<T> query = entities;
             if(filter is not null)
             {
-                query.Where(filter);
+              query =  query.Where(filter);
             }
             if(!string.IsNullOrEmpty(includProperties))
             {
                 foreach(var property in includProperties.Split(new char[] { ','},
                     StringSplitOptions.RemoveEmptyEntries))
                 {
-                    query.Include(filter);
+                  query =  query.Include(filter);
                 }
             }
             if(orderBy is not null)

@@ -19,14 +19,16 @@ namespace Movie.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Entities.Movie>>> Get()
         {    
-            var movies = await _unityOfWork.Movies.GetAll();
-            return movies.ToList();
+            var movies = await _unityOfWork.Movies
+                              .GetAllByFilter(null, x => x.OrderBy(x => x.Rating));
+            return Ok(movies);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Entities.Movie>> Get(int id)
         {
-            return await _unityOfWork.Movies.GetById(id);
+            return await _unityOfWork.Movies
+                          .FirstOrDefaultrFilter(x => x.Id == id);
         }
 
         [HttpPut]
@@ -35,6 +37,14 @@ namespace Movie.API.Controllers
             _unityOfWork.Movies.UpdateMovie(movie);
             await _unityOfWork.SaveChanges();
             return Ok();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, Entities.Movie movie)
+        {
+            await _unityOfWork.Movies.UpdateById(id, movie);
+            await _unityOfWork.SaveChanges();
+            return Ok("Updated");
         }
 
         [HttpPost]

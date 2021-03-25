@@ -12,9 +12,20 @@ namespace Movie.API.Data.Repositories.Repository
             _context = context;
         }
 
-        public async Task<Entities.Movie> GetById(int id)
+        public async Task UpdateById(int id, Entities.Movie movie)
         {
-            return await _context.Movies.SingleOrDefaultAsync(x => x.Id == id);
+            if (id <= 0 || movie is null) return;
+            var editMovie =   await _context.Movies
+                                    .SingleOrDefaultAsync(x => x.Id == id);
+
+            if (editMovie is null) return;
+            editMovie.Genre  = movie.Genre ?? editMovie.Genre;
+            editMovie.Title  = movie.Title ?? editMovie.Title;
+            editMovie.Rating = movie.Rating ?? editMovie.Rating;
+            editMovie.ImageUrl = movie.ImageUrl ?? editMovie.ImageUrl;
+            editMovie.Owner = movie.Owner ?? editMovie.Owner;
+            editMovie.ReleaseDate = movie.ReleaseDate != editMovie.ReleaseDate
+                                    ? movie.ReleaseDate : editMovie.ReleaseDate;
         }
 
         public void UpdateMovie(Entities.Movie movie)
