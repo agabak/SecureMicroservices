@@ -44,7 +44,7 @@ namespace Movie.API.Controllers
         {
             await _unityOfWork.Movies.UpdateById(id, movie);
             await _unityOfWork.SaveChanges();
-            return Ok("Updated");
+            return Ok();
         }
 
         [HttpPost]
