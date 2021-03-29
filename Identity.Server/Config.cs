@@ -18,7 +18,21 @@ namespace Identity.Server
                         new Secret("secret".Sha256())
                     },
                     AllowedScopes = { "movieAPI" }
-                }
+                },
+                new Client
+                {
+                    ClientId = "mvcClient",
+                    ClientName = "Mvc client app",
+                    AllowedGrantTypes = GrantTypes.Code,
+                    ClientSecrets =
+                    {
+                        new Secret("secret".Sha256())
+                    },
+                    AllowedScopes =
+                    {
+
+                    }
+                },
             };
 
         public static IEnumerable<ApiScope> ApiScopes =>
