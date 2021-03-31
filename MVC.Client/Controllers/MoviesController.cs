@@ -1,10 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MVC.Client.ApiServices;
 using MVC.Client.Models;
 using System.Threading.Tasks;
 
 namespace MVC.Client.Controllers
 {
+    [Authorize]
     public class MoviesController : Controller
     {
         private readonly IMovieApiService  _movieService;
@@ -123,6 +128,11 @@ namespace MVC.Client.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        
+        public async Task Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
+            RedirectToRoute("Home/Index");
+        }
     }
 }

@@ -35,7 +35,7 @@ namespace Identity.Server
                     },
                     PostLogoutRedirectUris = new List<string>
                     {
-                        "https://localhost:5002/signout-callback-iodc"
+                        "https://localhost:5002/signout-callback-oidc"
                     },
                     ClientSecrets =
                     {
