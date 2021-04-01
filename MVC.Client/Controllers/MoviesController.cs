@@ -73,10 +73,8 @@ namespace MVC.Client.Controllers
             }
 
             var movie = await _movieService.GetMovie((int)id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
+            if (movie == null) return NotFound();
+            
             return View(movie);
         }
 
@@ -109,14 +107,9 @@ namespace MVC.Client.Controllers
             {
                 return NotFound();
             }
+            await _movieService.DeleteMovie((int)id);
 
-            var movie = await _movieService.GetMovie((int)id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
-
-            return View(movie);
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Movies/Delete/5

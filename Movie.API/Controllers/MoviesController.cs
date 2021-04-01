@@ -66,12 +66,15 @@ namespace Movie.API.Controllers
             return Ok();
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> Delete(Entities.Movie movie)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
+            var movie = await _unityOfWork.Movies
+                       .FirstOrDefaultrFilter(x => x.Id == id);
+
              _unityOfWork.Movies.DeleteEntity(movie);
             await _unityOfWork.SaveChanges();
-            return NotFound();
+            return Ok();
         }
     }
 }

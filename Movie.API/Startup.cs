@@ -44,7 +44,7 @@ namespace Movie.API
 
             services.AddAuthorization(options => 
             {
-                options.AddPolicy("clientIdPolicy", policy => policy.RequireClaim("client_id", "movieClient"));
+                options.AddPolicy("clientIdPolicy", policy => policy.RequireClaim("client_id", "movies_mvc_client"));
             });
 
             services.AddScoped<IUnityOfWork, UnityOfWork>();

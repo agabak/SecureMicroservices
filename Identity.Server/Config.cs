@@ -15,19 +15,10 @@ namespace Identity.Server
             {
                 new Client
                 {
-                    ClientId = "movieClient",
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    ClientSecrets =
-                    {
-                        new Secret("secret".Sha256())
-                    },
-                    AllowedScopes = { "movieAPI" }
-                },
-                new Client
-                {
                     ClientId = "movies_mvc_client",
                     ClientName = "Movies MVC web app",
-                    AllowedGrantTypes = GrantTypes.Code,
+                    AllowedGrantTypes = GrantTypes.Hybrid,
+                    RequirePkce = false,
                     AllowRememberConsent = false,
                     RedirectUris = new List<string>
                     {
@@ -44,7 +35,8 @@ namespace Identity.Server
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "movieAPI"
                     }
                 },
             };
