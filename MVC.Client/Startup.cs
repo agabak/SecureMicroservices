@@ -28,13 +28,13 @@ namespace MVC.Client
             services.AddControllersWithViews();
             services.AddScoped<IMovieApiService, MovieApiService>();
 
-            services.AddAuthentication(options =>
-            {
-                options.DefaultScheme =
-                CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme =
-                OpenIdConnectDefaults.AuthenticationScheme;
-            })
+            _ = services.AddAuthentication(options =>
+              {
+                  options.DefaultScheme =
+                  CookieAuthenticationDefaults.AuthenticationScheme;
+                  options.DefaultChallengeScheme =
+                  OpenIdConnectDefaults.AuthenticationScheme;
+              })
               .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
               .AddOpenIdConnect
               (OpenIdConnectDefaults.AuthenticationScheme, options =>
@@ -45,8 +45,10 @@ namespace MVC.Client
                     options.ClientSecret = "secret";
                     options.ResponseType = "code id_token";
 
-                    options.Scope.Add("openid");
-                    options.Scope.Add("profile");
+                    //options.Scope.Add("openid");
+                    //options.Scope.Add("profile");
+                    options.Scope.Add("address");
+                    options.Scope.Add("email");
                     options.Scope.Add("movieAPI");
 
                     options.SaveTokens = true;

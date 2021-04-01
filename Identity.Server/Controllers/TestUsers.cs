@@ -11,7 +11,7 @@ using IdentityServer4;
 
 namespace IdentityServerHost.Quickstart.UI
 {
-    public class TestUsers
+    public static class TestUsers
     {
         public static List<TestUser> Users
         {
