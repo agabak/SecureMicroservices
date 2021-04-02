@@ -38,7 +38,8 @@ namespace Identity.Server
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Address,
                         IdentityServerConstants.StandardScopes.Email,
-                        "movieAPI"
+                        "movieAPI",
+                        "roles"
                     }
                 },
             };
@@ -60,7 +61,12 @@ namespace Identity.Server
               new IdentityResources.OpenId(),
               new IdentityResources.Profile(),
               new IdentityResources.Address(),
-              new IdentityResources.Email()
+              new IdentityResources.Email(),
+              new IdentityResource(
+                "roles",
+                "Your roles()",
+                new List<string> { "role"}
+                  )
             };
 
         public static List<TestUser> TestUsers =>

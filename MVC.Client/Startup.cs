@@ -1,4 +1,6 @@
-﻿using IdentityModel.Client;
+﻿using IdentityModel;
+using IdentityModel.Client;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
@@ -6,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using MVC.Client.ApiServices;
 using MVC.Client.HttpHandlers;
@@ -50,10 +53,19 @@ namespace MVC.Client
                     options.Scope.Add("address");
                     options.Scope.Add("email");
                     options.Scope.Add("movieAPI");
+                    options.Scope.Add("roles");
+
+                    // to have the roles after scope added
+                    options.ClaimActions.MapUniqueJsonKey("role", "role");
 
                     options.SaveTokens = true;
 
                     options.GetClaimsFromUserInfoEndpoint = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        NameClaimType = JwtClaimTypes.GivenName,
+                        RoleClaimType = JwtClaimTypes.Role
+                    };
                 }
               );
 
