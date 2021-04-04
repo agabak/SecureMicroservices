@@ -1,10 +1,14 @@
 ﻿using IdentityModel.Client;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using MVC.Client.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MVC.Client.ApiServices
@@ -13,17 +17,21 @@ namespace MVC.Client.ApiServices
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly HttpClient httpClient;
-        public MovieApiService(IHttpClientFactory httpClientFactory)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public MovieApiService(
+            IHttpClientFactory httpClientFactory,
+            IHttpContextAccessor httpContextAccessor)
         {
             _httpClientFactory = httpClientFactory ??
             throw new ArgumentNullException(nameof(httpClientFactory));
             httpClient = _httpClientFactory.CreateClient("movieAPIClient");
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<IEnumerable<Movie>> GetMovies()
         {
             var request = new HttpRequestMessage(
                 HttpMethod.Get,
-                "api/movies"
+                "/movies"
                 );
             var response = await httpClient.SendAsync(
                 request,HttpCompletionOption.ResponseHeadersRead
@@ -39,7 +47,7 @@ namespace MVC.Client.ApiServices
         {
             var request = new HttpRequestMessage(
                 HttpMethod.Get,
-                "api/movies/" + id
+                "/movies/" + id
                 );
             var response = await httpClient.SendAsync(
                 request, HttpCompletionOption.ResponseHeadersRead
@@ -52,7 +60,7 @@ namespace MVC.Client.ApiServices
         public async Task<Movie> CreateMovie(Movie movie)
         {
             var request = new HttpRequestMessage(
-               HttpMethod.Post,"api/movies");
+               HttpMethod.Post,"/movies");
 
             var content = JsonConvert.SerializeObject(movie);
             var buffer = System.Text.Encoding.UTF8.GetBytes(content);
@@ -71,7 +79,7 @@ namespace MVC.Client.ApiServices
         public async Task<Movie> UpdateMovie(Movie movie)
         {
             var request = new HttpRequestMessage(
-              HttpMethod.Put, "api/movies");
+              HttpMethod.Put, "/movies");
 
             var content = JsonConvert.SerializeObject(movie);
             var buffer = System.Text.Encoding.UTF8.GetBytes(content);
@@ -90,13 +98,40 @@ namespace MVC.Client.ApiServices
         public async Task DeleteMovie(int id)
         {
             var request = new HttpRequestMessage(
-              HttpMethod.Delete, "api/movies/" + id);
+              HttpMethod.Delete, "/movies/" + id);
 
             var response = await httpClient
                                  .DeleteAsync(request.RequestUri);
             if (response.IsSuccessStatusCode) return;
 
             throw new Exception(response.StatusCode.ToString());
+        }
+
+        public async Task<UserInfoResponse> GetUserInfo()
+        {
+           var idpClient = _httpClientFactory.CreateClient("IDPClient");
+
+            var disco = await idpClient.GetDiscoveryDocumentAsync();
+
+            if (disco.IsError)
+            {
+                throw new HttpRequestException("something went wrong connecting to IDP Client");
+            }
+
+            var token = await _httpContextAccessor
+                .HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
+            var userInfo = await idpClient.GetUserInfoAsync(
+                new UserInfoRequest
+                {
+                    Address = disco.UserInfoEndpoint,
+                    Token = token
+                });
+            if(userInfo.IsError)
+            {
+                throw new HttpRequestException("something went wrong to get a user info");
+            }
+
+            return userInfo;
         }
     }
 }

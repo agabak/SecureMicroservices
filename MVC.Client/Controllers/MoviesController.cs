@@ -127,5 +127,12 @@ namespace MVC.Client.Controllers
             await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
             RedirectToRoute("Home/Index");
         }
+
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> OnlyAdmin()
+        {
+            var userInfo = await _movieService.GetUserInfo();
+            return View(userInfo);
+        }
     }
 }

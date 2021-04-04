@@ -1,0 +1,18 @@
+﻿@using IdentityModel.Client;
+@model UserInfoResponse;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>OnlyAdmin</title>
+</head>
+<body>
+     @foreach (var claim in Model.Claims)
+     {  
+         <div>
+          <span>@claim.Type</span> <span>@claim.Value</span>
+         </div>
+     }
+</body>
+</html>
